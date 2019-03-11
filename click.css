@@ -8,3 +8,15 @@ main {
 main button.click {
     height: 25px;
 }
+
+main div {
+  justify-self: center;
+}
+
+main .score {
+}
+
+.arena {
+  padding-top: 50%;
+  justify-self: center;
+}
