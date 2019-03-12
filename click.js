@@ -1,60 +1,96 @@
-const state = {
-  level: 0,
-  arena_BUTTONS: [],
-  basic_increment: 1
-};
 let count = 0;
-addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
-const BUTTON = document.querySelector('button.click');
 const COUNTER = document.querySelector('.click-counter');
-BUTTON.onclick = CLICK_BUTTON;
 
-function CLICK_BUTTON() {
-  incrementCount();
-}
+class Button {
+  constructor(type, state) {
+    this.type = type;
+    this.state = state;
+    this.element = document.createElement('button');
+    this.element.classList.add(this.type);
+    this.element.innerHTML = this.type.charAt(0).toUpperCase() + this.type.slice(1);
+    this.element.onclick = this.onclick.bind(this);
+  }
 
-function incrementCount(){
-  count += state.basic_increment;
-  COUNTER.innerHTML = count;
-  stateCheck(count);
-}
-
-function stateCheck(count) {
-  if (state.level < 1) {
-    if (count === 10) {
-      addButtonToUpgrades(createButton(
-        'Another Button',
-        'click',
-        addAnotherArenaButton
-      ));
-    }
+  onclick() {
+    count += this.state.basic_increment;
+    COUNTER.innerHTML = count;
   }
 }
 
-function addAnotherArenaButton(){
-  state.basic_increment++;
-  addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
+class Game {
+  constructor() {
+    this.arena = document.querySelector('.arena');
+    this.upgrades = document.querySelector('.upgrades');
+    this.state = {
+      basic_increment: 1,
+    };
+    this.arena = new DomArea('main .arena', this.state);
+    this.upgrades = new UpgradesList('main .upgrades', this.state);
+  }
+  stateCheck(count) {
+    if (this.state.level < 1) {
+      if (count === 10) {
+        addButtonToUpgrades(createButton(
+          'Another Button',
+          'click',
+          addAnotherArenaButton
+        ));
+      }
+    }
+  }
+  addBasicButtonToArena() {
+    const button = new Button('click', this.state);
+    this.arena.addButton(button);
+  }
+  incrementCount() {
+    count += this.state.basic_increment;
+    COUNTER.innerHTML = count;
+    this.stateCheck(count);
+  }
+  addAnotherArenaButton() {
+    this.state.basic_increment++;
+    addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
+  }
 }
 
-function createButton(text, type, callback){
-  const new_button = document.createElement('button');
-  new_button.innerHTML = text;
-  new_button.classList.add(type);
-  new_button.onclick = callback.bind(new_button);
-  return new_button;
+class DomArea {
+  constructor(selector, state) {
+    this.state = state;
+    this.element = document.querySelector(selector);
+    this.domlist = [];
+  }
+  addButton(button) {
+    let el;
+    if (button instanceof Button) {
+      el = button.element;
+    } else {
+      el = button;
+    }
+    this.domlist.push(el);
+    this.element.appendChild(el);
+    return this.element;
+  }
 }
 
-function addButtonToUpgrades(button){
-  const upgrades_list = document.querySelector('.upgrades ul');
-  const new_upgrade_list_item = document.createElement('li');
-  new_upgrade_list_item.appendChild(button);
-  upgrades_list.appendChild(new_upgrade_list_item);
-  return upgrades_list;
+class UpgradesList extends DomArea {
+  constructor(selector) {
+    super(selector);
+  }
+  addButton(button) {
+    let el;
+    if (button instanceof Button) {
+      el = button.element;
+    } else {
+      el = button;
+    }
+    this.domlist.push(el);
+    const upgrades_list = this.element.querySelector('ul');
+    const new_upgrade_list_item = document.createElement('li');
+    new_upgrade_list_item.appendChild(el);
+    upgrades_list.appendChild(new_upgrade_list_item);
+    return this.upgrades_list;
+  }
 }
 
-function addButtonToArena(button){
-  const arena = document.querySelector('.arena');
-  arena.appendChild(button);
-  state.arena_BUTTONS.push(button);
-  return arena;
-}
+const game = new Game();
+game.addBasicButtonToArena();
