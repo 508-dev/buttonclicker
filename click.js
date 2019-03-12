@@ -31,10 +31,7 @@ class Game {
   stateCheck(count) {
     if (count === 10) {
       this.addButtonToUpgrades(
-        new Button('addClicker', function () {
-          this.addBasicButtonToArena.call(this);
-          this.state.basic_increment++;
-        }.bind(this)),
+        new Button('addClicker', this.upgradeAddBasicButton.bind(this)),
       );
     }
   }
@@ -50,9 +47,22 @@ class Game {
     COUNTER.innerHTML = count;
     this.stateCheck(count);
   }
+  decrementCount(num) {
+    count -= num;
+    COUNTER.innerHTML = count;
+    this.stateCheck();
+  }
   addAnotherArenaButton() {
     this.state.basic_increment++;
     addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
+  }
+  upgradeAddBasicButton() {
+    console.log(count)
+    if (count >= 10) {
+      this.addBasicButtonToArena.call(this);
+      this.state.basic_increment++;
+      this.decrementCount(10);
+    }
   }
 }
 
