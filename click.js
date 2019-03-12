@@ -31,7 +31,10 @@ class Game {
   stateCheck(count) {
     if (count === 10) {
       this.addButtonToUpgrades(
-        new Button('addClicker', this.addBasicButtonToArena.bind(this)),
+        new Button('addClicker', function () {
+          this.addBasicButtonToArena.call(this);
+          this.state.basic_increment++;
+        }.bind(this)),
       );
     }
   }
