@@ -2,18 +2,19 @@ let count = 0;
 const COUNTER = document.querySelector('.click-counter');
 
 class Button {
-  constructor(type, state) {
+  constructor(type, cb) {
     this.type = type;
-    this.state = state;
+    this.external_callback = cb || function(){};
     this.element = document.createElement('button');
     this.element.classList.add(this.type);
     this.element.innerHTML = this.type.charAt(0).toUpperCase() + this.type.slice(1);
     this.element.onclick = this.onclick.bind(this);
   }
-
   onclick() {
-    count += this.state.basic_increment;
-    COUNTER.innerHTML = count;
+    this.external_callback();
+  }
+  static basicClick() {
+    this.incrementCount();
   }
 }
 
@@ -28,19 +29,18 @@ class Game {
     this.upgrades = new UpgradesList('main .upgrades', this.state);
   }
   stateCheck(count) {
-    if (this.state.level < 1) {
-      if (count === 10) {
-        addButtonToUpgrades(createButton(
-          'Another Button',
-          'click',
-          addAnotherArenaButton
-        ));
-      }
+    if (count === 10) {
+      this.addButtonToUpgrades(
+        new Button('addClicker', this.addBasicButtonToArena.bind(this)),
+      );
     }
   }
   addBasicButtonToArena() {
-    const button = new Button('click', this.state);
+    const button = new Button('click', this.incrementCount.bind(this));
     this.arena.addButton(button);
+  }
+  addButtonToUpgrades(button) {
+    this.upgrades.addButton(button);
   }
   incrementCount() {
     count += this.state.basic_increment;
