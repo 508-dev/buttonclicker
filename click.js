@@ -24,20 +24,32 @@ class Game {
     this.upgrades = document.querySelector('.upgrades');
     this.state = {
       basic_increment: 1,
+      upgrades: [],
     };
     this.arena = new DomArea('main .arena', this.state);
     this.upgrades = new UpgradesList('main .upgrades', this.state);
   }
   stateCheck(count) {
-    if (count === 10) {
+    if (count === 10 && this.state.upgrades.indexOf('addClicker') === -1) {
+      this.state.upgrades.push('addClicker');
       this.addButtonToUpgrades(
         new Button('addClicker', this.upgradeAddBasicButton.bind(this)),
+      );
+    } else if (count >= 1000 && this.state.upgrades.indexOf('autoclicker') === -1) {
+      this.state.upgrades.push('autoclicker');
+      this.addButtonToUpgrades(
+        new Button('autoClicker', this.upgradeAddAutoClicker.bind(this)),
       );
     }
   }
   addBasicButtonToArena() {
     const button = new Button('click', this.incrementCount.bind(this));
     this.arena.addButton(button);
+  }
+  addAutoClicker() {
+    setInterval(function(){
+      this.incrementCount();
+    }.bind(this), 1000);
   }
   addButtonToUpgrades(button) {
     this.upgrades.addButton(button);
@@ -52,15 +64,17 @@ class Game {
     COUNTER.innerHTML = count;
     this.stateCheck();
   }
-  addAnotherArenaButton() {
-    this.state.basic_increment++;
-    addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
-  }
   upgradeAddBasicButton() {
     if (count >= 10) {
       this.addBasicButtonToArena.call(this);
       this.state.basic_increment++;
       this.decrementCount(10);
+    }
+  }
+  upgradeAddAutoClicker() {
+    if (count >= 1000) {
+      this.addAutoClicker();
+      this.decrementCount(1000);
     }
   }
 }
