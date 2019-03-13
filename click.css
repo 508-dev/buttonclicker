@@ -52,6 +52,10 @@ main div {
       width: 180px;
       font-size: 2em;
     }
+    main div.upgrades button {
+        height: 110px !important;
+        font-size: 2em;
+    }
 }
 
 /* min-width 641px and max-width 1024px, use when QAing tablet-only issues */
