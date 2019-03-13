@@ -57,7 +57,6 @@ class Game {
     addButtonToArena(createButton('Click', 'click', CLICK_BUTTON));
   }
   upgradeAddBasicButton() {
-    console.log(count)
     if (count >= 10) {
       this.addBasicButtonToArena.call(this);
       this.state.basic_increment++;
