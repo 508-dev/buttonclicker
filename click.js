@@ -35,7 +35,7 @@ class Game {
       this.addButtonToUpgrades(
         new Button('addClicker', this.upgradeAddBasicButton.bind(this)),
       );	
-	} else if (count >= 100 && this.state.upgrades.indexOf('add10Clickers') === -1) {
+    } else if (count >= 100 && this.state.upgrades.indexOf('add10Clickers') === -1) {
       this.state.upgrades.push('add10Clickers');
       this.addButtonToUpgrades(
         new Button('add10Clickers', this.upgradeAdd10Clickers.bind(this)),
@@ -77,7 +77,7 @@ class Game {
     }
   }
   upgradeAdd10Clickers() {
-    if (count >= 50) {
+    if (count >= 100) {
 	  for (let i =0; i < 10; i++)
 	  {
 		this.addBasicButtonToArena.call(this);
