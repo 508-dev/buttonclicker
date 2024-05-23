@@ -34,6 +34,11 @@ class Game {
       this.state.upgrades.push('addClicker');
       this.addButtonToUpgrades(
         new Button('addClicker', this.upgradeAddBasicButton.bind(this)),
+      );	
+    } else if (count >= 100 && this.state.upgrades.indexOf('add10Clickers') === -1) {
+      this.state.upgrades.push('add10Clickers');
+      this.addButtonToUpgrades(
+        new Button('add10Clickers', this.upgradeAdd10Clickers.bind(this)),
       );
     } else if (count >= 1000 && this.state.upgrades.indexOf('autoclicker') === -1) {
       this.state.upgrades.push('autoclicker');
@@ -69,6 +74,16 @@ class Game {
       this.addBasicButtonToArena.call(this);
       this.state.basic_increment++;
       this.decrementCount(10);
+    }
+  }
+  upgradeAdd10Clickers() {
+    if (count >= 100) {
+	  for (let i =0; i < 10; i++)
+	  {
+		this.addBasicButtonToArena.call(this);
+		this.state.basic_increment++;
+	  }
+      this.decrementCount(100);
     }
   }
   upgradeAddAutoClicker() {
